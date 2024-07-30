@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Durée depuis la date de naissance</title>
+    <!-- Importation de la police Arial depuis Google Fonts -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Arial', sans-serif; /* Utiliser Arial comme police principale */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 600px;
+        }
+        select {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .duration {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="personName">Personne</h1>
+    <img id="personImage" src="" alt="Image de la personne" height="500px"><br>
+    <select id="personSelect">
+        <option value="lautaro">Lautaro Martinez</option>
+        <option value="carla">Carla Couderc</option>
+        <option value="topScorer">Meilleur Buteur de Serie A</option>
+        <option value="vlahovic">Dusan Vlahovic</option>
+        <option value="osimhen">Victor Osimhen</option>
+        <option value="giroud">Olivier Giroud</option>
+        <option value="ibrahimovic">Zlatan Ibrahimović</option>
+    </select>
+    <select id="durationSelect">
+        <option value="full">Âge global</option>
+        <option value="years">Années</option>
+        <option value="months">Mois totaux</option>
+        <option value="days">Jours totaux</option>
+        <option value="hours">Heures totales</option>
+        <option value="minutes">Minutes totales</option>
+        <option value="seconds">Secondes totales</option>
+        <option value="weeks">Semaines totales</option>
+        <option value="milliseconds">Millisecondes totales</option>
+    </select>
+    <div id="duration" class="duration"></div>
+</div>
+
+<script>
+    const people = {
+        lautaro: {
+            name: 'Lautaro Martinez',
+            birthdate: new Date('1997-08-22T00:00:00Z'),
+            image: './lautaro-martinez-argentina_12644311190x786.jpg'
+        },
+        carla: {
+            name: 'Carla Couderc',
+            birthdate: new Date('2005-11-19T00:00:00Z'),
+            image: 'https://thesevendeadlysinsds.github.io/transfermarkt_bundesliga-s_goalkeepers/img/carla%20couderc1.png'
+        },
+        topScorer: {
+            name: 'Meilleur Buteur de Serie A',
+            birthdate: new Date('2007-03-03T00:00:00Z'),
+            image: 'IMG_20240329_215905 - Copie.jpg'
+        },
+        vlahovic: {
+            name: 'Dusan Vlahovic',
+            birthdate: new Date('2000-01-28T00:00:00Z'),
+            image: 'https://img.a.transfermarkt.technology/portrait/big/357498-1683293071.jpg'
+        },
+        osimhen: {
+            name: 'Victor Osimhen',
+            birthdate: new Date('1998-12-29T00:00:00Z'),
+            image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/0K8A7984_%2853451306826%29_%28cropped%29.jpg/280px-0K8A7984_%2853451306826%29_%28cropped%29.jpg'
+        },
+        giroud: {
+            name: 'Olivier Giroud',
+            birthdate: new Date('1986-09-30T00:00:00Z'),
+            image: 'https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/15/giroud__7_-22159766.jpg'
+        },
+        ibrahimovic: {
+            name: 'Zlatan Ibrahimović',
+            birthdate: new Date('1981-10-03T00:00:00Z'),
+            image: 'https://media.gqmagazine.fr/photos/63bed9d235fc113fac34f561/1:1/w_2667,h_2667,c_limit/GettyImages-1235215302.jpg'
+        }
+    };
+
+    async function fetchCurrentTime() {
+        try {
+            const response = await fetch('https://worldtimeapi.org/api/ip');
+            if (!response.ok) {
+                throw new Error('Erreur de connexion au serveur');
+            }
+            const data = await response.json();
+            return new Date(data.datetime); // Convertir en objet Date
+        } catch (error) {
+            console.error('Erreur lors de la récupération de l\'heure du serveur:', error);
+            return new Date(); // En cas d'erreur, retourne la date locale
+        }
+    }
+
+    function formatNumber(number) {
+        return number.toLocaleString('fr-FR');
+    }
+
+    function calculateDuration(startDate, currentDate) {
+        const totalMilliseconds = currentDate - startDate;
+        const totalSeconds = Math.floor(totalMilliseconds / 1000);
+        const totalMinutes = Math.floor(totalSeconds / 60);
+        const totalHours = Math.floor(totalMinutes / 60);
+        const totalDays = Math.floor(totalHours / 24);
+        const totalWeeks = Math.floor(totalDays / 7);
+        const totalMonths = Math.floor(totalDays / 30.44); // Environ 30.44 jours par mois
+        const totalYears = Math.floor(totalMonths / 12);
+
+        let years = totalYears;
+        let months = totalMonths % 12;
+        let days = Math.floor(totalDays % 30.44);
+        let hours = totalHours % 24;
+        let minutes = totalMinutes % 60;
+        let seconds = totalSeconds % 60;
+        let milliseconds = totalMilliseconds % 1000;
+
+        return {
+            years,
+            months,
+            days,
+            hours,
+            minutes,
+            seconds,
+            milliseconds,
+            totalYears,
+            totalMonths,
+            totalDays,
+            totalWeeks,
+            totalHours,
+            totalMinutes,
+            totalSeconds,
+            totalMilliseconds
+        };
+    }
+
+    function formatDuration(duration, unit) {
+        switch (unit) {
+            case 'years':
+                return `${formatNumber(duration.totalYears)} ans`;
+            case 'months':
+                return `${formatNumber(duration.totalMonths)} mois`;
+            case 'days':
+                return `${formatNumber(duration.totalDays)} jours`;
+            case 'hours':
+                return `${formatNumber(duration.totalHours)} heures`;
+            case 'minutes':
+                return `${formatNumber(duration.totalMinutes)} minutes`;
+            case 'seconds':
+                return `${formatNumber(duration.totalSeconds)} secondes`;
+            case 'weeks':
+                return `${formatNumber(duration.totalWeeks)} semaines`;
+            case 'milliseconds':
+                return `${formatNumber(duration.totalMilliseconds)} millisecondes`;
+            case 'full':
+                return `${formatNumber(duration.years)} ans, ${formatNumber(duration.months)} mois, ${formatNumber(duration.days)} jours, ${formatNumber(duration.hours)} heures, ${formatNumber(duration.minutes)} minutes, ${formatNumber(duration.seconds)} secondes`;
+            default:
+                return `${formatNumber(duration.years)} ans`;
+        }
+    }
+
+    async function updateDuration() {
+        const durationElement = document.getElementById('duration');
+        const personSelect = document.getElementById('personSelect');
+        const selectedPerson = people[personSelect.value];
+        const currentDate = await fetchCurrentTime();
+        
+        const duration = calculateDuration(selectedPerson.birthdate, currentDate);
+        const selectElement = document.getElementById('durationSelect');
+        const selectedOption = selectElement.value;
+        const durationString = formatDuration(duration, selectedOption);
+        
+        durationElement.textContent = durationString;
+    }
+
+    function updatePerson() {
+        const personSelect = document.getElementById('personSelect');
+        const selectedPerson = people[personSelect.value];
+        
+        document.getElementById('personName').textContent = selectedPerson.name;
+        document.getElementById('personImage').src = selectedPerson.image;
+        document.body.style.fontFamily = 'Arial, sans-serif'; // Assigner Arial comme police pour le corps
+        updateDuration();
+    }
+
+    document.getElementById('personSelect').addEventListener('change', updatePerson);
+    document.getElementById('durationSelect').addEventListener('change', updateDuration);
+
+    // Initialiser avec les informations de Lautaro Martinez
+    updatePerson();
+    
+    // Mettre à jour la durée chaque seconde
+    setInterval(updateDuration, 1000);
+</script>
+
+</body>
+</html>

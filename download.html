@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extraction de lien de téléchargement Google Drive</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        input, button {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Extraction de lien de téléchargement Google Drive</h1>
+    <input type="text" id="driveUrl" placeholder="Entrez l'URL du fichier Google Drive">
+    <button onclick="generateDownloadLink()">Générer le lien de téléchargement</button>
+    <div id="downloadLinkContainer"></div>
+</div>
+
+<script>
+    function generateDownloadLink() {
+        const driveUrl = document.getElementById('driveUrl').value;
+        const fileIdMatch = driveUrl.match(/d\/([^\/]+)/);
+        if (fileIdMatch) {
+            const fileId = fileIdMatch[1];
+            const downloadLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+            const downloadLinkContainer = document.getElementById('downloadLinkContainer');
+            downloadLinkContainer.innerHTML = `<a href="${downloadLink}" target="_blank">Download</a>`;
+        } else {
+            alert('URL de fichier Google Drive invalide');
+        }
+    }
+</script>
+
+</body>
+</html>

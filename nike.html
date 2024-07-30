@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extraction de Miniature YouTube</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+        select {
+            margin-top: 10px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Extraction de Miniature YouTube</h1>
+    <input type="text" id="videoUrl" placeholder="Entrez l'URL de la vidéo YouTube">
+    <select id="thumbnailSize">
+        <option value="maxresdefault">Max Résolution (maxresdefault)</option>
+        <option value="sddefault">Standard Définition (sddefault)</option>
+        <option value="hqdefault">Haute Qualité (hqdefault)</option>
+        <option value="mqdefault">Qualité Moyenne (mqdefault)</option>
+    </select>
+    <button onclick="extractThumbnail()">Extraire Miniature</button>
+    <div id="thumbnailContainer"></div>
+</div>
+
+<script>
+    function extractThumbnail() {
+        const videoUrl = document.getElementById('videoUrl').value;
+        const size = document.getElementById('thumbnailSize').value;
+        const videoIdMatch = videoUrl.match(/v=([^&]+)/);
+
+        if (videoIdMatch) {
+            const videoId = videoIdMatch[1];
+            const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/${size}.jpg`;
+
+            const thumbnailContainer = document.getElementById('thumbnailContainer');
+            thumbnailContainer.innerHTML = `<img src="${thumbnailUrl}" alt="Miniature YouTube">`;
+        } else {
+            alert('URL de vidéo YouTube invalide');
+        }
+    }
+</script>
+
+</body>
+</html>

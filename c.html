@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Mot de Passe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 600px;
+        }
+        input[type="number"], button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #resultContainer {
+            margin-top: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .message {
+            color: #d9534f;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Générateur de Mot de Passe</h1>
+    <input type="number" id="passwordLength" min="1" placeholder="Longueur du mot de passe">
+    <button onclick="generatePassword()">Générer le Mot de Passe</button>
+    <div id="resultContainer"></div>
+    <div id="message" class="message" style="display: none;"></div>
+</div>
+
+<script>
+    function generatePassword() {
+        const length = parseInt(document.getElementById('passwordLength').value);
+        const resultContainer = document.getElementById('resultContainer');
+        const message = document.getElementById('message');
+        
+        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}|;:',.<>?/";
+        
+        if (isNaN(length) || length <= 0) {
+            message.style.display = 'block';
+            message.innerHTML = '<img src="https://www.footballbootsdb.com/logos/boots/2024/05/664cfebba0bad.png" alt="Erreur">';
+            resultContainer.innerHTML = '';
+            return;
+        }
+        
+        let password = '';
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * charset.length);
+            password += charset[randomIndex];
+        }
+
+        if (password.length > 999) {
+            // Convertir le mot de passe en image
+            const imgSrc = "https://www.footballbootsdb.com/logos/boots/2024/05/664cfebba0bad.png";
+            resultContainer.innerHTML = `<img src="${imgSrc}" alt="Mot de Passe">`;
+        } else {
+            resultContainer.innerHTML = `<p>${password}</p>`;
+        }
+        
+        message.style.display = 'none';
+    }
+
+    document.getElementById('passwordLength').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Empêcher le comportement par défaut (rechargement de la page)
+            generatePassword(); // Appeler la fonction pour générer le mot de passe
+        }
+    });
+</script>
+
+</body
