@@ -24,6 +24,20 @@
         input, button {
             margin: 10px 0;
         }
+        .download-button {
+            cursor: pointer;
+            background-color: blue;
+            color: white;
+            font-family: Arial, sans-serif;
+            border-radius: 20px;
+            border: none;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .download-button:hover {
+            background-color: darkblue;
+        }
     </style>
 </head>
 <body>
@@ -37,18 +51,39 @@
 
 <script>
     function generateDownloadLink() {
-        const driveUrl = document.getElementById('driveUrl').value;
-        const fileIdMatch = driveUrl.match(/d\/([^\/]+)/);
-        if (fileIdMatch) {
-            const fileId = fileIdMatch[1];
-            const downloadLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    const driveUrl = document.getElementById('driveUrl').value;
+    const fileIdMatch = driveUrl.match(/d\/([^\/]+)/);
+    if (fileIdMatch) {
+        const fileId = fileIdMatch[1];
+        const downloadLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
 
-            const downloadLinkContainer = document.getElementById('downloadLinkContainer');
-            downloadLinkContainer.innerHTML = `<a href="${downloadLink}" target="_blank">Download</a>`;
-        } else {
-            alert('URL de fichier Google Drive invalide');
-        }
+        const downloadLinkContainer = document.getElementById('downloadLinkContainer');
+        downloadLinkContainer.innerHTML = `
+            <a href="${downloadLink}" target="_blank"><button class="download-button">Download</button></a>
+            <br>
+            <button onclick="copyToClipboard('${downloadLink}')">Copier le lien de téléchargement</button>
+        `;
+    } else {
+        alert('URL de fichier Google Drive invalide');
     }
+}
+
+function copyToClipboard(downloadLink) {
+    // Create a temporary input element
+    var tempInput = document.createElement("input");
+    tempInput.value = downloadLink;
+    document.body.appendChild(tempInput);
+
+    // Select the text and copy it to the clipboard
+    tempInput.select();
+    document.execCommand("copy");
+
+    // Remove the temporary input element
+    document.body.removeChild(tempInput);
+
+    // Notify the user that the link has been copied
+    alert("Le lien de téléchargement a été bien copié!");
+}
 </script>
 
 </body>
